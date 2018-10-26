@@ -4,10 +4,11 @@ const bodyParser = require('body-parser')
 const morgan = require('morgan')
 
 // Require only routes
+const mainRoute = require('./routes/main')
 const productRoute = require('./routes/product')
 const categoryRoute = require('./routes/category')
 
-const config = require('./config-app')
+const config = require('./app-config')
 const app = express()
 
 //Connecte to Database
@@ -20,25 +21,20 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(morgan('dev'))
 
 // Main routes
-app.get('/', (req, res) => {
-    res.status(200).send('Hello world')
-})
+app.use('/', mainRoute)
 app.use('/product', productRoute)
 app.use('/category', categoryRoute)
 
+
+// Check not found url and res -> Error 404
 app.use((req, res, next) => {
     const error = new Error('Not found')
     error.status = 404
-
     next(error)
 })
 app.use((error, req, res, next) => {
     res.status(error.status || 500)
-    res.json({
-        error: {
-            message: error.message
-        }
-    })
+    res.json({ message: error.message })
 })
 
 module.exports = app
