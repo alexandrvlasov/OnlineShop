@@ -7,6 +7,9 @@ const morgan = require('morgan')
 const mainRoute = require('./routes/main')
 const productRoute = require('./routes/product')
 const categoryRoute = require('./routes/category')
+const authRoute = require('./routes/auth')
+const cartRoute = require('./routes/cart')
+const accountRoute = require('./routes/account')
 
 const config = require('./app-config')
 const app = express()
@@ -24,7 +27,9 @@ app.use(morgan('dev'))
 app.use('/', mainRoute)
 app.use('/product', productRoute)
 app.use('/category', categoryRoute)
-
+app.use('/auth', authRoute)
+app.use('/cart', cartRoute) // shopping cart
+app.use('/account', accountRoute)
 
 // Check not found url and res -> Error 404
 app.use((req, res, next) => {

@@ -16,22 +16,22 @@ router.get('/all', async (req, res) => {
 
 router.get('/:productId', (req, res) => {
     Product.findById(req.params.productId).exec().then(product => {
-        // let categoryArr = []
+        let categoryArr = [ 'Hello', 'new' ]
         
-        // if (product.category) {
-        //     product.category.forEach(productCategory => {
-        //         console.log(productCategory)
-        //         const cat = Category.find({ _id: productCategory })//.exec().then(category => {
-        //         categoryArr.push(cat.name)
+        if (product.category) {
+            const categoryIdArray = product.category
 
-        //         //     categoryArr.push(category)
-        //         //     console.log(category)
-        //         // }).catch(err => {
+            categoryIdArray.forEach(categoryId => {
+                console.log(categoryId)
+                Category.findById(categoryId).select('name image').exec().then(category => {
                     
-        //         // })
-        //     })
-        // }
-        // console.log(categoryArr)
+                    categoryArr.push(category.name)
+                }).catch(err => {
+                    res.status(500).json({ error: err.message })
+                })
+            })
+        }
+        console.log(`array: ${categoryArr}`) // `name: ${category.name}, img: ${category.image}`
 
         res.status(200).json({ product: product, category: 'categoryArr' })
     }).catch(err => {
